@@ -6,7 +6,9 @@ import tensorflow_probability as tfp
 
 ode_fn1 = lambda t, x: tf.math.sin(t) + tf.constant(3.) * tf.math.cos(tf.constant(2.) * t) - x
 
-an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - (1./10.) * np.exp(-t)
+an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
+                    (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
+                    (1./10.) * np.exp(-t)
 
 t_begin=0.
 t_end=10.
