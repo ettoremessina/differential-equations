@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 
 from scipy.integrate import solve_ivp
 
+#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ODE1stIVP
+
 ode_fn1 = lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x
 
 an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
