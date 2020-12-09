@@ -5,7 +5,7 @@ from scipy.integrate import solve_ivp
 
 #https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ODE1stIVP
 
-ode_fn1 = lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x
+ode_fn = lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x
 
 an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
                     (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
@@ -20,7 +20,7 @@ x_init = 0.
 x_an_sol = an_sol(t_space)
 
 method = 'RK45' #available methods: 'RK45', 'RK23', 'DOP853', 'Radau', 'BDF', 'LSODA'
-num_sol = solve_ivp(ode_fn1, [t_begin, t_end], [x_init], method=method, dense_output=True)
+num_sol = solve_ivp(ode_fn, [t_begin, t_end], [x_init], method=method, dense_output=True)
 x_num_sol = num_sol.sol(t_space).T
 
 plt.figure()
