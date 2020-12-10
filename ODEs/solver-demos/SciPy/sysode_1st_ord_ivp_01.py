@@ -1,9 +1,11 @@
+#Please see
+#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#sys1
+#for details
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from scipy.integrate import solve_ivp
-
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#SysODEs1stIVP
 
 def ode_fn(t, XY):
 	x=XY[0]

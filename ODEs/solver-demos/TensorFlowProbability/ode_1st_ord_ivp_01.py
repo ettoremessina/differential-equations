@@ -1,10 +1,12 @@
+#Please see
+#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+#for details
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ODE1stIVP
 
 ode_fn = lambda t, x: tf.math.sin(t) + tf.constant(3.) * tf.math.cos(tf.constant(2.) * t) - x
 

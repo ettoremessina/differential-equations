@@ -1,9 +1,11 @@
+#Please see
+#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+#for details
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from scipy.integrate import solve_ivp
-
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ODE1stIVP
 
 ode_fn = lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x
 

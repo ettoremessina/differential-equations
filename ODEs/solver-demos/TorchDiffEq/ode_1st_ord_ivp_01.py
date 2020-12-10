@@ -1,10 +1,12 @@
+#Please see
+#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+#for details
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 import torch
 from torchdiffeq import odeint
-
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ODE1stIVP
 
 ode_fn = lambda t, x: torch.sin(t) + 3. * torch.cos(2. * t) - x
 
@@ -16,11 +18,11 @@ t_begin=0.
 t_end=10.
 t_nsamples=100
 t_space = np.linspace(t_begin, t_end, t_nsamples)
-x_init = torch.tensor([0.])
+x_init = torch.Tensor([0.])
 
 x_an_sol = an_sol(t_space)
 
-x_num_sol = odeint(ode_fn, x_init, torch.tensor(t_space))
+x_num_sol = odeint(ode_fn, x_init, torch.Tensor(t_space))
 
 plt.figure()
 plt.plot(t_space, x_an_sol, label='analytical')

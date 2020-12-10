@@ -1,12 +1,15 @@
+#Please see
+#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#sys1
+#for details
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 import tensorflow as tf
 import tensorflow_probability as tfp
 
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#SysODEs1stIVP
-
-A = tf.constant([[-1., 1.], [4., -1.]])
+A = tf.constant([[-1., 1.],
+                 [4., -1.]])
 
 def ode_fn(t, X):
 	return tf.linalg.matvec(A, X)
