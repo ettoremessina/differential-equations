@@ -12,8 +12,7 @@ A = tf.constant([[-1., 1.],
                  [4., -1.]],
                  dtype=tf.float64)
 
-def ode_fn(t, X):
-	return A @ X
+ode_fn = lambda t, XY : A @ XY
 
 an_sol_x = lambda t : np.exp(t) + np.exp(-3. * t)
 an_sol_y = lambda t : 2. * np.exp(t) - 2. * np.exp(-3. * t)

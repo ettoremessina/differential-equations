@@ -5,11 +5,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import torch
-from torchdiffeq import odeint
+from scipy.integrate import solve_ivp
 
-A = torch.Tensor([[-1., 1.],
-                  [4., -1.]])
+A = [[-1., 1.],
+    [4., -1.]]
 
 ode_fn = lambda t, XY : A @ XY
 
@@ -20,20 +19,24 @@ t_begin=0.
 t_end=5.
 t_nsamples=100
 t_space = np.linspace(t_begin, t_end, t_nsamples)
-x_init = torch.Tensor([2.])
-y_init = torch.Tensor([0.])
+x_init = 2.
+y_init = 0.
 
 x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
-x_num_sol = odeint(ode_fn, torch.cat([x_init, y_init]), torch.Tensor(t_space)).numpy()
+method = 'RK45' #available methods: 'RK45', 'RK23', 'DOP853', 'Radau', 'BDF', 'LSODA'
+num_sol = solve_ivp(ode_fn, [t_begin, t_end], [x_init, y_init], method=method, dense_output=True)
+XY_num_sol = num_sol.sol(t_space)
+x_num_sol = XY_num_sol[0].T
+y_num_sol = XY_num_sol[1].T
 
 plt.figure()
 plt.plot(t_space, x_an_sol, label='analytical x')
 plt.plot(t_space, y_an_sol, label='analytical y')
-plt.plot(t_space, x_num_sol[:,0], label='numerical x')
-plt.plot(t_space, x_num_sol[:,1], label='numerical y')
-plt.title('System of two ODEs 1st order IVP solved by TorchDiffEq')
+plt.plot(t_space, x_num_sol, label='numerical x')
+plt.plot(t_space, y_num_sol, label='numerical y')
+plt.title('System of 2 ODEs 1st order IVP solved by SciPy with method=' + method)
 plt.xlabel('t')
 plt.legend()
 plt.show()

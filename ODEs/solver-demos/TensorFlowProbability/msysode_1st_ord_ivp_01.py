@@ -11,8 +11,7 @@ import tensorflow_probability as tfp
 A = tf.constant([[-1., 1.],
                  [4., -1.]])
 
-def ode_fn(t, X):
-	return tf.linalg.matvec(A, X)
+ode_fn = lambda t, XY : tf.linalg.matvec(A, XY)
 
 an_sol_x = lambda t : np.exp(t) + np.exp(-3. * t)
 an_sol_y = lambda t : 2. * np.exp(t) - 2. * np.exp(-3. * t)
