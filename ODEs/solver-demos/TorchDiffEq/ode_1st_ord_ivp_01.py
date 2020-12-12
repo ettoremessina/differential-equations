@@ -1,6 +1,8 @@
-#Please see
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
-#for details
+"""
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+for details
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,8 +27,8 @@ x_an_sol = an_sol(t_space)
 x_num_sol = odeint(ode_fn, x_init, torch.Tensor(t_space))
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(t_space, x_num_sol, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by TorchDiffEq')
 plt.xlabel('t')
 plt.ylabel('x')

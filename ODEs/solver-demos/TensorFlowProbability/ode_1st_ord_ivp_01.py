@@ -1,6 +1,8 @@
-#Please see
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
-#for details
+"""
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+for details
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,8 +29,8 @@ num_sol = tfp.math.ode.BDF().solve(ode_fn, t_init, x_init,
 	solution_times=tfp.math.ode.ChosenBySolver(tf.constant(t_end)) )
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(num_sol.times, num_sol.states, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(num_sol.times, num_sol.states, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by TFP with BDF')
 plt.xlabel('t')
 plt.ylabel('x')

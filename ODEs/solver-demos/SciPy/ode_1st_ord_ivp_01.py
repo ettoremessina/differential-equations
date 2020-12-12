@@ -1,6 +1,8 @@
-#Please see
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
-#for details
+"""
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+for details
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,8 +28,8 @@ num_sol = solve_ivp(ode_fn, [t_begin, t_end], [x_init], method=method, dense_out
 x_num_sol = num_sol.sol(t_space).T
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(t_space, x_num_sol, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by SciPy with method=' + method)
 plt.xlabel('t')
 plt.ylabel('x')

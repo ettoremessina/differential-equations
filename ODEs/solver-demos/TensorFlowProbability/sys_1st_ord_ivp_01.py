@@ -1,6 +1,8 @@
-#Please see
-#https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#sys1
-#for details
+"""
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#sys1
+for details
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,12 +10,12 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_probability as tfp
 
-def ode_fn(t, XY):
+def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
 	dy_dt= 4. * x - y
-	return torch.cat([dx_dt, dy_dt])
+	return [dx_dt, dy_dt]
 
 an_sol_x = lambda t : np.exp(t) + np.exp(-3. * t)
 an_sol_y = lambda t : 2. * np.exp(t) - 2. * np.exp(-3. * t)
@@ -29,14 +31,14 @@ y_init = tf.constant(0.)
 x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
-num_sol = tfp.math.ode.BDF().solve(ode_fn, t_init, [x_init, y_init],
+num_sol = tfp.math.ode.BDF().solve(ode_sys, t_init, [x_init, y_init],
 	solution_times=tfp.math.ode.ChosenBySolver(tf.constant(t_end)) )
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical x')
-plt.plot(t_space, y_an_sol, label='analytical y')
-plt.plot(num_sol.times, num_sol.states[0], label='numerical x')
-plt.plot(num_sol.times, num_sol.states[1], label='numerical y')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol, '--', linewidth=2, label='analytical y')
+plt.plot(num_sol.times, num_sol.states[0], linewidth=1, label='numerical x')
+plt.plot(num_sol.times, num_sol.states[1], linewidth=1, label='numerical y')
 plt.title('System of two ODEs 1st order IVP solved by TFP with BDF')
 plt.xlabel('t')
 plt.legend()
