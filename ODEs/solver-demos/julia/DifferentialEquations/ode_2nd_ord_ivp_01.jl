@@ -1,3 +1,9 @@
+#=
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode2
+for details
+=#
+
 #=Original problem
 x′′ + x′ + 2x = 0
 x(0)=1

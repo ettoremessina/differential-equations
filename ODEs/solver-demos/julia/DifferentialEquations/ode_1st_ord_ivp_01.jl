@@ -1,3 +1,9 @@
+#=
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#ode1
+for details
+=#
+
 #=Original problem
 x′ + x = sin t + 3 cos 2t
 x(0) = 0

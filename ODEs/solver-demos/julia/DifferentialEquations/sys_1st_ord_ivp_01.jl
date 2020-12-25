@@ -1,3 +1,9 @@
+#=
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#sys1
+for details
+=#
+
 #=Original problem
 x′ + x − y = 0
 y′ − 4x + y = 0
@@ -19,8 +25,9 @@ using DifferentialEquations
 using Plots
 
 function ode_fn(du,u,p,t)
-    du[1] = u[2] - u[1]
-    du[2] = 4.0 * u[1] - u[2]
+    x, y = u
+    du[1] = y - x
+    du[2] = 4.0 * x - y
 end
 
 an_sol_x(t) = exp(t) + exp(-3.0 * t)

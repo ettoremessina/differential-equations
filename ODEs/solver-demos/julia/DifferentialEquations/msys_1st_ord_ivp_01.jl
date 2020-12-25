@@ -1,3 +1,9 @@
+#=
+Please see
+https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html#sys1
+for details
+=#
+
 #=Original problem
 x′ + x − y = 0
 y′ − 4x + y = 0
