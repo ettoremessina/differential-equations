@@ -74,8 +74,10 @@ epochs = 1000
 learning_rate = 0.05
 data = Iterators.repeated((), epochs)
 opt = ADAM(learning_rate)
+
 callback_func = function ()
-  println("loss: ", loss_func())
+  loss_value = loss_func()
+  println("Loss: ", loss_value)
 end
 fparams = Flux.params(p)
 Flux.train!(loss_func, fparams, data, opt, cb=callback_func)
