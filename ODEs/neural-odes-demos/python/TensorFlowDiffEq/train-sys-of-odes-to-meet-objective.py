@@ -1,6 +1,6 @@
 """
 For details, please visit:
-https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-TFDiffEq.html#exp1
+https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html#exp1
 
 Parametric system to train:
 x' = a1 x + b1 y + c1 e^(-d1 t)
@@ -69,10 +69,10 @@ t_space_tensor = tf.constant(t_space)
 x_init = tf.constant([0.], dtype=t_space_tensor.dtype)
 y_init = tf.constant([0.], dtype=t_space_tensor.dtype)
 u_init = tf.convert_to_tensor([x_init, y_init], dtype=t_space_tensor.dtype)
-args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True, dtype=t_space_tensor.dtype) for i in range(0, 8)]
+args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True, dtype=t_space_tensor.dtype)
+          for i in range(0, 8)]
 
-learning_rate=0.05
-#epsilon
+learning_rate = 0.05
 epochs = 200
 optimizer = tfko.Adam(learning_rate=learning_rate)
 
@@ -80,8 +80,8 @@ def net():
   return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args), u_init, t_space_tensor)
 
 def loss_func(num_sol):
-  return tf.reduce_sum(tf.abs(dataset_outs[0] - num_sol[:, 0])) + \
-         tf.reduce_sum(tf.abs(dataset_outs[1] - num_sol[:, 1]))
+  return tf.reduce_sum(tf.square(dataset_outs[0] - num_sol[:, 0])) + \
+         tf.reduce_sum(tf.square(dataset_outs[1] - num_sol[:, 1]))
 
 for epoch in range(epochs):
   with tf.GradientTape() as tape:
