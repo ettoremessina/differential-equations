@@ -10,9 +10,9 @@ t_nsamples=101
 t_space, t_step = np.linspace(t_begin, t_end, t_nsamples, retstep=True)
 
 k_range=9
-a = -1.
-ad = 0.5
-b = 0.75
+a = 0.5
+ad = -2.5
+b = 1.75
 h = 1.
 g = lambda t : 1. - 0.1 * t
 u = lambda t : 0.2 * t
@@ -64,14 +64,36 @@ def x(t):
 
 x_num_sol=[x(t) for t in t_space]
 
+print(t_step)
+
 plt.figure()
-plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
-plt.title('DDE 1st order IVP solved by W Lambert function')
+plt.plot(t_space, np.real(x_num_sol), linewidth=1, label='real')
+plt.plot(t_space, np.imag(x_num_sol), linewidth=1, label='imaginary')
+plt.title('DDE 1st order IVP solved with W Lambert function')
 plt.xlabel('t')
-plt.ylabel('x')
+plt.ylabel('x(t)')
 plt.legend()
 plt.show()
 
-#x_num_grad_left = [(x_num_sol[i+1] - x_num_sol[i]) / t_step for i in range(11, t_nsamples-1)]
-#x_num_grad_right = [a * x_num_sol[i] + ad * x_num_sol[i - 10] + b * u(t_space[i]) for i in range(11, t_nsamples-1)]
-#print(real(np.array(x_num_grad_left)) - real(np.array(x_num_grad_right)))
+num_of_cells_for_h_time = int(h/t_step)
+
+x_num_grad_left = [np.real((x_num_sol[i+1] - x_num_sol[i])) / t_step 
+	for i in range(num_of_cells_for_h_time, t_nsamples-1)]
+x_num_grad_right = [
+	a * np.real(x_num_sol[i]) + 
+	ad * np.real(x_num_sol[i - num_of_cells_for_h_time]) 
+	+ b * u(t_space[i]) 
+		for i in range(num_of_cells_for_h_time, t_nsamples-1)]
+
+plt.figure()
+plt.plot(range(num_of_cells_for_h_time, t_nsamples-1), x_num_grad_left, linewidth=1, label='left')
+plt.plot(range(num_of_cells_for_h_time, t_nsamples-1), x_num_grad_right, linewidth=1, label='right')
+plt.title('Derivative of the solution of DDE solved with W Lambert function')
+plt.xlabel('t')
+plt.ylabel('x(t)')
+plt.legend()
+plt.show()
+
+
+
+
