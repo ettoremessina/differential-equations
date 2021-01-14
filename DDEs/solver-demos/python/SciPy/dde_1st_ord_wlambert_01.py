@@ -16,7 +16,7 @@ b = 1.75
 h = 1.
 g = lambda t : 1. - 0.1 * t
 u = lambda t : 0.2 * t
-x_0 = 1.5
+x0 = 1.5
 
 sk_fn = lambda k :  (1./h) * lambertw(ad * h * np.exp(-a * h), k) + a
 SK = [sk_fn(k) for k in range (-k_range, k_range+1)]
@@ -57,7 +57,7 @@ def x(t):
         sk = SK[k + k_range]
         int_for_cki = integral_for_cki(sk)
         ck_denom = (1. + ad * h * np.exp(-sk * h))
-        cki = (x_0 + ad * np.exp(-sk * h) * int_for_cki) / ck_denom
+        cki = (x0 + ad * np.exp(-sk * h) * int_for_cki) / ck_denom
         tot += np.exp(sk * t) * cki
     tot += integral_for_x_t()
     return tot
