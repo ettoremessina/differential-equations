@@ -21,7 +21,7 @@ x_an_sol = lmbd_sol(t_space)
 
 plt.figure()
 plt.plot(t_space, x_an_sol, linewidth=1, label='analytical')
-plt.title('separable variable ODE 1st order')
+plt.title('homogeneous ODE 1st order')
 plt.xlabel('t')
 plt.ylabel('f(t)')
 plt.legend()

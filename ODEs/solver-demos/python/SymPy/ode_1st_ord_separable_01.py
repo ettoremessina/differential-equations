@@ -8,7 +8,7 @@ f, g, h = symbols('f g h', cls=Function)
 
 eq = Eq(f(t).diff(t), -2 * t * f(t))
 an_sol = dsolve(eq, ics={f(0): 1})
-print(classify_ode(eq)[0])
+print('ODE class: ', classify_ode(eq)[0])
 pprint(an_sol)
 
 t_begin=0.
@@ -21,7 +21,7 @@ x_an_sol = lmbd_sol(t_space)
 
 plt.figure()
 plt.plot(t_space, x_an_sol, linewidth=1, label='analytical')
-plt.title('separable variable ODE 1st order')
+plt.title('separable ODE 1st order')
 plt.xlabel('t')
 plt.ylabel('f(t)')
 plt.legend()
