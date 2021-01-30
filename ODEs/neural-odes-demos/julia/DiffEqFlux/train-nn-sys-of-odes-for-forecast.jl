@@ -18,23 +18,23 @@ datasize = 51
 t = range(tbegin,tend,length=datasize)
 u0 = [2.5; 0.5]
 tspan = (tbegin,tend)
-trange = range(tspan[1],tspan[2],length=datasize)
+trange = range(tbegin,tend,length=datasize)
 prob = ODEProblem(true_ode, u0, tspan)
-dataset_outs = Array(solve(prob, Tsit5(), saveat=trange))
-reltol = 1e-7
-abstol = 1e-9
+dataset_ts = Array(solve(prob, Tsit5(), saveat=trange))
 
 dudt = Chain(u -> math_law(u),
              Dense(2, 50, tanh),
              Dense(50, 2))
 
+reltol = 1e-7
+abstol = 1e-9
 n_ode = NeuralODE(dudt, tspan, Tsit5(), saveat=trange, reltol=reltol,abstol=abstol)
 ps = Flux.params(n_ode.p)
 
 function loss_n_ode()
   pred = n_ode(u0)
-  loss = sum(abs2, dataset_outs[1,:] .- pred[1,:]) +
-         sum(abs2, dataset_outs[2,:] .- pred[2,:])
+  loss = sum(abs2, dataset_ts[1,:] .- pred[1,:]) +
+         sum(abs2, dataset_ts[2,:] .- pred[2,:])
   loss
 end
 
@@ -55,7 +55,7 @@ Flux.train!(loss_n_ode, ps, data, opt, cb=cb)
 
 pl = plot(
   trange,
-  dataset_outs[1,:],
+  dataset_ts[1,:],
   linewidth=2, ls=:dash,
   title="Neural ODE for forecasting",
   xaxis="t",
@@ -65,7 +65,7 @@ display(pl)
 
 pl = plot!(
   trange,
-  dataset_outs[2,:],
+  dataset_ts[2,:],
   linewidth=2, ls=:dash,
   label="original timeseries y(t)")
 display(pl)
@@ -91,7 +91,7 @@ tend_forecast = tbegin_forecast + 5.0
 tspan_forecast = (tbegin_forecast, tend_forecast)
 datasize_forecast = 351
 trange_forecast = range(tspan_forecast[1], tspan_forecast[2], length=datasize_forecast)
-u0_forecast = [dataset_outs[1,datasize], dataset_outs[2,datasize]]
+u0_forecast = [dataset_ts[1,datasize], dataset_ts[2,datasize]]
 
 n_ode_forecast = NeuralODE(
   n_ode.model, tspan_forecast;
