@@ -6,26 +6,34 @@ https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes
 using Plots
 using Flux
 using DiffEqFlux
+using OrdinaryDiffEq
 
 tbegin = 0.0
 tend = 4.0
 datasize = 51
 dataset_in = range(tbegin, tend, length=datasize)
-dataset_out = log.(1 .+ dataset_in) .- 3 * sqrt.(dataset_in)
+dataset_out = log.(1 .+ dataset_in) .-  3 * sqrt.(dataset_in)
 
-function neural_network(data_dim)
+function neural_ode(data_dim; saveat = dataset_in)
     fc = FastChain(FastDense(data_dim, 64, swish),
                   FastDense(64, 32, swish),
                   FastDense(32, data_dim))
+
+    n_ode = NeuralODE(
+            fc,
+            (minimum(dataset_in), maximum(dataset_in)),
+            Tsit5(),
+            saveat = saveat,
+            abstol = 1e-9, reltol = 1e-9)
 end
 
-nn = neural_network(1)
-theta = initial_params(nn)
+n_ode = neural_ode(1)
+theta = n_ode.p
 
-predict(t, p) = nn(t', p)'
+predict(p) = n_ode(dataset_out[1:1], p)'
 
 loss(p) = begin
-  yhat = predict(dataset_in, p)
+  yhat = predict(p)
   l = Flux.mse(yhat, dataset_out)
 end
 
@@ -43,13 +51,13 @@ res_train = DiffEqFlux.sciml_train(
     maxiters = epochs,
     cb = cb_train)
 
-y_pred = predict(dataset_in, res_train.minimizer)
+y_pred = predict(res_train.minimizer)
 
 pl = plot(
     dataset_in,
     dataset_out,
     linewidth=2, ls=:dash,
-    title="MLP by FastChain without Neural ODEs",
+    title="MLP by FastChain with Neural ODEs",
     xaxis="t",
     label="original y(t)",
     legend=:topright)
