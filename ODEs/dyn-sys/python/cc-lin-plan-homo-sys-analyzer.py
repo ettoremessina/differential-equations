@@ -27,7 +27,14 @@ def analyze_homo_sys_2x2(detA, eigW1, eigW2, eigV1, eigV2):
         sol1 = C1 * sp.exp(eigW1 * t) * eigV1r
         sol2 = C2 * sp.exp(eigW2 * t) * eigV2r
 
-        if eigW1 > 0 and eigW2 > 0:
+        if np.isclose(eigW1, eigW2):
+            if (not np.allclose(eigV1, eigV2)):
+                cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' singular node (said also star point)'
+            else:
+                cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' degenerate node'
+                sol1 = None #not yet supported
+                sol2 = None #not yet supported
+        elif eigW1 > 0 and eigW2 > 0:
             cpKind = 'unstable node'
         elif (eigW1 > 0 and eigW2 < 0) or (eigW1 < 0 and eigW2 > 0):
             cpKind = 'saddle point'
@@ -49,17 +56,20 @@ def analyze_homo_sys_2x2(detA, eigW1, eigW2, eigV1, eigV2):
         sol2 = C2 * sp.exp(eigW2r * t) * \
                     (eigV2r * sp.cos(eigW2i * t) - eigV2i * sp.sin(eigW2i * t))
 
-        if eigW1r > 0:
-            cpKind = 'unstable focus'
-        elif eigW1r == 0:
+        if np.isclose(eigW1r, 0):
             cpKind = 'center'
+        elif eigW1r > 0:
+            cpKind = 'unstable focus'
         elif eigW1r < 0:
             cpKind = 'stable focus'
 
-    sym_sol = sol1 + sol2
+    if sol1 != None:
+        sym_sol = sol1 + sol2
+    else:
+        sym_sol = None
     return cpKind, sym_sol
 
-def init_plt():
+def init_phase_portrait():
     plt.xlabel('x', fontsize=args.font_size)
     plt.ylabel('y', fontsize=args.font_size)
     plt.tick_params(labelsize=args.font_size)
@@ -105,19 +115,36 @@ def plot_eigenvectors(eigW1, eigW2, eigV1, eigV2):
         plt.quiver(ox, oy, v2x, v2y, units='xy',scale=1, angles='xy',
             color='green' if eigW2 < 0 else 'magenta')
 
-def plot_favourite_solution(sym_sol):
-    def plot_favourite_solution_aux(lambda_favourite_sol, ts):
-      xs = lambda_favourite_sol(args.constant_of_integration_C1, args.constant_of_integration_C2, ts)
-      plt.plot(xs[0], xs[1], color='gold', linewidth=2)
+def plot_favourite_trajectory(sym_sol):
+    def plot_favourite_trajectory_aux(lambda_favourite_sol, ts):
+        xs = lambda_favourite_sol(args.constant_of_integration_C1, args.constant_of_integration_C2, ts)
+        plt.plot(xs[0], xs[1], color='gold', linewidth=2)
 
     t = sp.symbols('t')
     C1, C2 = sp.symbols('C1 C2', real = True, constant = True)
     lambda_favourite_sol = sp.lambdify([C1, C2, t], sym_sol)
 
     ts = np.linspace(0, args.t_end, args.t_num_of_samples)
-    plot_favourite_solution_aux(lambda_favourite_sol, ts)
+    plot_favourite_trajectory_aux(lambda_favourite_sol, ts)
     ts = np.linspace(0, -args.t_end, args.t_num_of_samples)
-    plot_favourite_solution_aux(lambda_favourite_sol, ts)
+    plot_favourite_trajectory_aux(lambda_favourite_sol, ts)
+
+def init_solution_graph():
+    plt.xlabel('t', fontsize=args.font_size)
+    #plt.ylabel('y', fontsize=args.font_size)
+    plt.tick_params(labelsize=args.font_size)
+    plt.xlim(0, args.t_end)
+
+def plot_favourite_solution(sym_sol):
+    t = sp.symbols('t')
+    C1, C2 = sp.symbols('C1 C2', real = True, constant = True)
+    lambda_favourite_sol = sp.lambdify([C1, C2, t], sym_sol)
+
+    ts = np.linspace(0, args.t_end, args.t_num_of_samples)
+    xs = lambda_favourite_sol(args.constant_of_integration_C1, args.constant_of_integration_C2, ts)
+    plt.plot(ts, xs[0], color='blue', linewidth=1, label='x(t)')
+    plt.plot(ts, xs[1], color='purple', linewidth=1, label='y(t)')
+    plt.legend()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='%(prog)s analyzes a dynamyc system modeled by a linear planar system', formatter_class=RawTextHelpFormatter)
@@ -256,13 +283,17 @@ if __name__ == "__main__":
     print('General solution :')
     sp.pprint(sym_sol)
 
-    init_plt()
+    init_phase_portrait()
     plot_phase_portait()
     plot_gradient_vector()
     plot_eigenvectors(eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
-    if (args.plot_favourite_sol):
-        plot_favourite_solution(sym_sol)
-
+    if (sym_sol != None and args.plot_favourite_sol):
+        plot_favourite_trajectory(sym_sol)
     plt.show()
+
+    if (sym_sol != None and args.plot_favourite_sol):
+        init_solution_graph()
+        plot_favourite_solution(sym_sol)
+        plt.show()
 
     print("#### Terminated %s ####" % os.path.basename(__file__));
