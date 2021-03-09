@@ -13,7 +13,7 @@ def dX_dt(X, t):
         args.matrix[0] * X[0] + args.matrix[1] * X[1],
         args.matrix[2] * X[0] + args.matrix[3] * X[1]]
 
-def analyze_homo_sys_2x2(detA, eigW1, eigW2, eigV1, eigV2):
+def analyze_homo_sys_2x2(matrixA, eigW1, eigW2, eigV1, eigV2):
     t = sp.symbols('t')
     C1, C2 = sp.symbols('C1 C2', real = True, constant = True)
 
@@ -28,12 +28,18 @@ def analyze_homo_sys_2x2(detA, eigW1, eigW2, eigV1, eigV2):
         sol2 = C2 * sp.exp(eigW2 * t) * eigV2r
 
         if np.isclose(eigW1, eigW2):
-            if (not np.allclose(eigV1, eigV2)):
+            matrixVV = np.matrix([eigV1, eigV2])
+            detVV = npla.det(matrixVV)
+            if (not np.isclose(detVV, 0.)):
                 cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' singular node (said also star point)'
             else:
                 cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' degenerate node'
-                sol1 = None #not yet supported
-                sol2 = None #not yet supported
+                eigV1, eigV2 = compute_generalized_eigenvectors(matrixA)
+                if eigV1 != None and eigV2 != None:
+                   eigV1r = sp.Array(eigV1)
+                   eigV2r = sp.Array(eigV2)
+                   sol1 = C1 * sp.exp(eigW1 * t) * eigV1r
+                   sol2 = C2 * sp.exp(eigW1 * t) * (t * eigV1r + eigV2r)
         elif eigW1 > 0 and eigW2 > 0:
             cpKind = 'unstable node'
         elif (eigW1 > 0 and eigW2 < 0) or (eigW1 < 0 and eigW2 > 0):
@@ -68,6 +74,15 @@ def analyze_homo_sys_2x2(detA, eigW1, eigW2, eigV1, eigV2):
     else:
         sym_sol = None
     return cpKind, sym_sol
+
+def compute_generalized_eigenvectors(A):
+    A = sp.Matrix(A)
+    P, blocks = A.jordan_cells()
+    basis = [P[:,i] for i in range(P.shape[1])]
+    if (len(basis) == 2):
+        return [basis[0][0], basis[0][1]], [basis[1][0], basis[1][1]]
+    else:
+        return None, None
 
 def init_phase_portrait():
     plt.xlabel('x', fontsize=args.font_size)
@@ -278,7 +293,7 @@ if __name__ == "__main__":
     print('Eigenvector 1    : ', eigenvector1)
     print('Eigenvector 2    : ', eigenvector2)
 
-    cpKind, sym_sol = analyze_homo_sys_2x2(detA, eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
+    cpKind, sym_sol = analyze_homo_sys_2x2(matrixA, eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
     print('Kind of c.p.     : ', cpKind)
     print('General solution :')
     sp.pprint(sym_sol)
