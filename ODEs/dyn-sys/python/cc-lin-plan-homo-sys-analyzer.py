@@ -52,7 +52,7 @@ def analyze_homo_sys_2x2(npA, spA, eigW1, eigW2, eigV1, eigV2):
                        sol1 = C1 * sp.exp(eigW1 * t) * eigV1r
                        sol2 = C2 * sp.exp(eigW1 * t) * (t * eigV1r + eigV2r)
             else:
-                cpKind = 'full plane'
+                cpKind = 'whole plan'
                 sol1 = None
                 sol2 = None
         elif np.isclose(eigW1, 0):
@@ -322,7 +322,7 @@ if __name__ == "__main__":
 
     init_phase_portrait()
     plot_phase_portait()
-    if cpKind != 'full plane':
+    if cpKind != 'whole plan':
         plot_gradient_vector()
     plot_eigenvectors(eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
     if (sym_sol != None and args.plot_favourite_sol and cpKind != 'degenerate line'):
