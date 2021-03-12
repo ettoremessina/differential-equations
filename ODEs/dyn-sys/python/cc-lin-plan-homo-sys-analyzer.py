@@ -52,7 +52,7 @@ def analyze_homo_sys_2x2(npA, spA, eigW1, eigW2, eigV1, eigV2):
                        sol1 = C1 * sp.exp(eigW1 * t) * eigV1r
                        sol2 = C2 * sp.exp(eigW1 * t) * (t * eigV1r + eigV2r)
             else:
-                cpKind = 'whole plan'
+                cpKind = 'whole plane'
                 sol1 = None
                 sol2 = None
         elif np.isclose(eigW1, 0):
@@ -143,14 +143,20 @@ def plot_eigenvectors(eigW1, eigW2, eigV1, eigV2):
     if not np.iscomplex(eigW1):
         v1x = np.array((eigV1[0]))
         v1y = np.array((eigV1[1]))
-        plt.quiver(ox, oy, v1x, v1y, units='xy',scale=1, angles='xy', 
-            color='green' if eigW1 < 0 else 'magenta')
+        if not np.isclose(eigW1, 0.):
+            color = 'green' if eigW1 < 0 else 'magenta'
+        else:
+            color = 'black'
+        plt.quiver(ox, oy, v1x, v1y, units='xy',scale=1, angles='xy', color=color)
 
     if not np.iscomplex(eigW2):
         v2x = np.array((eigV2[0]))
         v2y = np.array((eigV2[1]))
-        plt.quiver(ox, oy, v2x, v2y, units='xy',scale=1, angles='xy',
-            color='green' if eigW2 < 0 else 'magenta')
+        if not np.isclose(eigW2, 0.):
+            color = 'green' if eigW2 < 0 else 'magenta'
+        else:
+            color = 'black'
+        plt.quiver(ox, oy, v2x, v2y, units='xy',scale=1, angles='xy', color=color)
 
 def plot_favourite_trajectory(sym_sol):
     def plot_favourite_trajectory_aux(lambda_favourite_sol, ts):
@@ -186,7 +192,7 @@ def plot_favourite_solution(sym_sol):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='%(prog)s analyzes a dynamyc system modeled by a linear planar system', formatter_class=RawTextHelpFormatter)
 
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0.1')
 
     parser.add_argument('--matrix',
                         type=float,
@@ -322,7 +328,7 @@ if __name__ == "__main__":
 
     init_phase_portrait()
     plot_phase_portait()
-    if cpKind != 'whole plan':
+    if cpKind != 'whole plane':
         plot_gradient_vector()
     plot_eigenvectors(eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
     if (sym_sol != None and args.plot_favourite_sol and cpKind != 'degenerate line'):
