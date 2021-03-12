@@ -13,12 +13,16 @@ def dX_dt(X, t):
         args.matrix[0] * X[0] + args.matrix[1] * X[1],
         args.matrix[2] * X[0] + args.matrix[3] * X[1]]
 
-def analyze_homo_sys_2x2(matrixA, eigW1, eigW2, eigV1, eigV2):
+def compute_critical_points(spA):
+    x, y = sp.symbols('x, y')
+    return sp.linsolve((spA, [0, 0]), [x, y])
+
+def analyze_homo_sys_2x2(npA, spA, eigW1, eigW2, eigV1, eigV2):
     t = sp.symbols('t')
     C1, C2 = sp.symbols('C1 C2', real = True, constant = True)
 
-    cpKind = 'unknown'
-    sym_sol = 'unknown'
+    cpKind = ''
+    sym_sol = None
 
     if not np.iscomplex(eigW1):
         eigV1r = sp.Array(eigV1)
@@ -28,18 +32,33 @@ def analyze_homo_sys_2x2(matrixA, eigW1, eigW2, eigV1, eigV2):
         sol2 = C2 * sp.exp(eigW2 * t) * eigV2r
 
         if np.isclose(eigW1, eigW2):
-            matrixVV = np.matrix([eigV1, eigV2])
-            detVV = npla.det(matrixVV)
-            if (not np.isclose(detVV, 0.)):
-                cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' singular node (said also star point)'
+            if not np.allclose(npA, [[0., 0.], [0., 0.]]):
+                matrixVV = np.matrix([eigV1, eigV2])
+                detVV = npla.det(matrixVV)
+                if (not np.isclose(detVV, 0.)):
+                    cpKind = ('stable' if eigW1 < 0 else 'unstable') + \
+                              ' singular node (said also star point)'
+                else:
+                    if not np.isclose(eigW1, 0):
+                        cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' degenerate node'
+                    else:
+                        cpKind = 'degenerate line'
+                    eigV1, eigV2 = compute_generalized_eigenvectors(spA)
+                    if eigV1 != None and eigV2 != None:
+                       print('Generalized Eigenvector 1 : ', eigV1)
+                       print('Generalized Eigenvector 2 : ', eigV2)
+                       eigV1r = sp.Array(eigV1)
+                       eigV2r = sp.Array(eigV2)
+                       sol1 = C1 * sp.exp(eigW1 * t) * eigV1r
+                       sol2 = C2 * sp.exp(eigW1 * t) * (t * eigV1r + eigV2r)
             else:
-                cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' degenerate node'
-                eigV1, eigV2 = compute_generalized_eigenvectors(matrixA)
-                if eigV1 != None and eigV2 != None:
-                   eigV1r = sp.Array(eigV1)
-                   eigV2r = sp.Array(eigV2)
-                   sol1 = C1 * sp.exp(eigW1 * t) * eigV1r
-                   sol2 = C2 * sp.exp(eigW1 * t) * (t * eigV1r + eigV2r)
+                cpKind = 'full plane'
+                sol1 = None
+                sol2 = None
+        elif np.isclose(eigW1, 0):
+            cpKind = ('stable' if eigW2 < 0 else 'unstable') + ' line'
+        elif np.isclose(eigW2, 0):
+            cpKind = ('stable' if eigW1 < 0 else 'unstable') + ' line'
         elif eigW1 > 0 and eigW2 > 0:
             cpKind = 'unstable node'
         elif (eigW1 > 0 and eigW2 < 0) or (eigW1 < 0 and eigW2 > 0):
@@ -69,15 +88,18 @@ def analyze_homo_sys_2x2(matrixA, eigW1, eigW2, eigV1, eigV2):
         elif eigW1r < 0:
             cpKind = 'stable focus'
 
-    if sol1 != None:
+    if sol1 != None and sol2 != None:
         sym_sol = sol1 + sol2
+    elif sol1 != None:
+        sym_sol = sol1
+    elif sol2 != None:
+        sym_sol = sol2
     else:
         sym_sol = None
     return cpKind, sym_sol
 
-def compute_generalized_eigenvectors(A):
-    A = sp.Matrix(A)
-    P, blocks = A.jordan_cells()
+def compute_generalized_eigenvectors(spA):
+    P, blocks = spA.jordan_cells()
     basis = [P[:,i] for i in range(P.shape[1])]
     if (len(basis) == 2):
         return [basis[0][0], basis[0][1]], [basis[1][0], basis[1][1]]
@@ -267,17 +289,15 @@ if __name__ == "__main__":
     if len(args.matrix) != 4:
         raise Exception('Number of coefficient of matrix has to be 4, because the matrix of a planar system is 2x2')
 
-    matrixA = np.matrix(
+    npA = np.matrix(
           [
               [args.matrix[0], args.matrix[1]],
               [args.matrix[2], args.matrix[3]]
           ])
+    spA = sp.Matrix(npA)
+    detA = npla.det(npA)
 
-    detA = npla.det(matrixA)
-    if (np.isclose(detA, 0.)):
-        raise Exception('At moment this program supports only simple system; simple means det(A) != 0')
-
-    eigenvalues, eigenvectors = npla.eig(matrixA)
+    eigenvalues, eigenvectors = npla.eig(npA)
 
     if len(eigenvalues) != 2:
         raise Exception('Unexpected number of eigenvalues: they must be 2')
@@ -287,22 +307,25 @@ if __name__ == "__main__":
     eigenvector1 = [eigenvectors[0, 0], eigenvectors[1, 0]] 
     eigenvector2 = [eigenvectors[0, 1], eigenvectors[1, 1]]
 
-    print('Critical point   : ', [0, 0])
-    print('Determinant      : ', detA)
-    print('Eigenvalues      : ', eigenvalues)
-    print('Eigenvector 1    : ', eigenvector1)
-    print('Eigenvector 2    : ', eigenvector2)
+    critical_points = compute_critical_points(spA)
 
-    cpKind, sym_sol = analyze_homo_sys_2x2(matrixA, eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
-    print('Kind of c.p.     : ', cpKind)
-    print('General solution :')
+    print('Critical point(s)         : ', sp.pretty(critical_points))
+    print('Determinant               : ', detA)
+    print('Eigenvalues               : ', eigenvalue1, eigenvalue2)
+    print('Eigenvector 1             : ', eigenvector1)
+    print('Eigenvector 2             : ', eigenvector2)
+
+    cpKind, sym_sol = analyze_homo_sys_2x2(npA, spA, eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
+    print('Kind of critical point(s) : ', cpKind)
+    print('General solution          :')
     sp.pprint(sym_sol)
 
     init_phase_portrait()
     plot_phase_portait()
-    plot_gradient_vector()
+    if cpKind != 'full plane':
+        plot_gradient_vector()
     plot_eigenvectors(eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
-    if (sym_sol != None and args.plot_favourite_sol):
+    if (sym_sol != None and args.plot_favourite_sol and cpKind != 'degenerate line'):
         plot_favourite_trajectory(sym_sol)
     plt.show()
 
