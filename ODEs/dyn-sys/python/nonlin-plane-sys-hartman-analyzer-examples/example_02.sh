@@ -1,5 +1,6 @@
 python ../nonlin-plane-sys-hartman-analyzer.py \
-    --dX_dt "[X[1], X[0] * (1 - X[0]**2) + X[1]]" \
+    --dx_dt "y" \
+    --dy_dt "x * (1 - x**2) + y" \
     --t_num_of_samples 500 \
     --x0_begin -3 --x0_end 3 \
     --y0_begin -3 --y0_end 3
