@@ -1,4 +1,4 @@
-python ../nonlin-plane-sys-hartman-analyzer.py \
+python ../nonlin-auton-plane-sys-hartman-analyzer.py \
     --dx_dt "y" \
     --dy_dt "x * (1 - x**2) + y" \
     --t_num_of_samples 500 \
