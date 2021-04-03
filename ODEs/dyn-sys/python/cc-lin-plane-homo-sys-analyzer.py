@@ -13,7 +13,8 @@ from _homo_plane_sys_analyzer_aux import analyze_homo_sys_2x2
 from _plane_sys_plot_aux import \
     init_phase_portrait, \
     plot_phase_portait, \
-    plot_gradient_vector
+    plot_gradient_vector, \
+    plot_eigenvectors
 
 def dX_dt(X, t):
     return [
@@ -24,27 +25,6 @@ def compute_critical_points(spA):
     x, y = sp.symbols('x, y')
     return sp.linsolve((spA, [0, 0]), [x, y])
 
-def plot_eigenvectors(eigW1, eigW2, eigV1, eigV2):
-    ox = np.array((0))
-    oy = np.array((0))
-
-    if not np.iscomplex(eigW1):
-        v1x = np.array((eigV1[0]))
-        v1y = np.array((eigV1[1]))
-        if not np.isclose(eigW1, 0.):
-            color = 'green' if eigW1 < 0 else 'magenta'
-        else:
-            color = 'black'
-        plt.quiver(ox, oy, v1x, v1y, units='xy',scale=1, angles='xy', color=color)
-
-    if not np.iscomplex(eigW2):
-        v2x = np.array((eigV2[0]))
-        v2y = np.array((eigV2[1]))
-        if not np.isclose(eigW2, 0.):
-            color = 'green' if eigW2 < 0 else 'magenta'
-        else:
-            color = 'black'
-        plt.quiver(ox, oy, v2x, v2y, units='xy',scale=1, angles='xy', color=color)
 
 def plot_favourite_trajectory(sym_sol):
     def plot_favourite_trajectory_aux(lambda_favourite_sol, ts):
@@ -159,7 +139,7 @@ if __name__ == "__main__":
     plot_phase_portait(args, dX_dt)
     if cpKind != 'whole plane':
         plot_gradient_vector(args, dX_dt)
-    plot_eigenvectors(eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
+    plot_eigenvectors([0, 0], eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)
     if (sym_sol != None and args.plot_favourite_sol and cpKind != 'degenerate line'):
         plot_favourite_trajectory(sym_sol)
     plt.show()
