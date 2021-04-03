@@ -12,6 +12,8 @@ Please visit [here](https://computationalmindset.com/en/neural-networks/experime
 
 Please visit [here](https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html) for Neural ODEs experiments with TensorFlowDiffEq.
 
+Please visit [here](https://computationalmindset.com/en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html] for a tool written in Python to study the behavior of a linear and homogeneous dynamic system on the plane with constant coefficients defined by a system of two differential equations expressed in matrix form.
+
 ## DDEs
 
 [DDEs](./DDEs) folder contains demos and examples to deal with delay differential equations.
