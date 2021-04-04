@@ -41,14 +41,14 @@ def add_xyt_params(parser):
                         dest='y0_begin',
                         default=-5.,
                         required=False,
-                        help='In the phase portait diagram, it is the starting value of of interval for initial condition y0')
+                        help='In the phase portait diagram, it is the starting value of interval for initial condition y0')
 
     parser.add_argument('--y0_end',
                         type=float,
                         dest='y0_end',
                         default=5.,
                         required=False,
-                        help='In the phase portait diagram, it is the final value of of interval for initial condition y0')
+                        help='In the phase portait diagram, it is the final value of interval for initial condition y0')
 
     parser.add_argument('--y0_num_of_samples',
                         type=int,

@@ -83,13 +83,13 @@ if __name__ == "__main__":
                         type=str,
                         dest='func_dx_dt_body',
                         required=True,
-                        help='dx_dt(x, y, t) body (lamba format)')
+                        help='dx/dt=P(x, y) body (lamba format)')
 
     parser.add_argument('--dy_dt',
                         type=str,
                         dest='func_dy_dt_body',
                         required=True,
-                        help='dy_dt(x, y, t) body (lamba format)')
+                        help='dy/dt=Q(x, y) body (lamba format)')
 
     add_xyt_params(parser)
     add_plot_params(parser)
