@@ -12,7 +12,9 @@ Please visit [here](https://computationalmindset.com/en/neural-networks/experime
 
 Please visit [here](https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html) for Neural ODEs experiments with TensorFlowDiffEq.
 
-Please visit [here](https://computationalmindset.com/en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html) for a tool written in Python to study the behavior of a linear and homogeneous dynamic system on the plane with constant coefficients defined by a system of two differential equations expressed in matrix form.
+Please visit [here](https://computationalmindset.com/en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html) for a tool written in Python to study the behavior of a linear and homogeneous dynamical system on the plane with constant coefficients defined by a system of two differential equations expressed in matrix form.
+
+Please visit [here](https://computationalmindset.com/en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html) for a tool written in Python to study the behavior of a nonlinear and dynamical system around its hyperbolic critical points by linearization applying the Hartman-Grobman theorem.
 
 ## DDEs
 
