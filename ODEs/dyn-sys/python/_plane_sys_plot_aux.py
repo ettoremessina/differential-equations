@@ -10,15 +10,16 @@ def init_phase_portrait(args):
     plt.xlim(args.x0_begin, args.x0_end)
     plt.ylim(args.y0_begin, args.y0_end)
 
-def plot_phase_portait(args, dX_dt):
+def plot_phase_portait(args, dX_dt, plot_neg_time_traj=True):
     icx = np.linspace(args.x0_begin, args.x0_end, args.x0_num_of_samples)
     icy = np.linspace(args.y0_begin, args.y0_end, args.y0_num_of_samples)
 
     ts = np.linspace(0, args.t_end, args.t_num_of_samples)
     plot_trajectory(plt, dX_dt, icx, icy, ts)
 
-    ts = np.linspace(0, -args.t_end, args.t_num_of_samples)
-    plot_trajectory(plt, dX_dt, icx, icy, ts)
+    if plot_neg_time_traj:
+        ts = np.linspace(0, -args.t_end, args.t_num_of_samples)
+        plot_trajectory(plt, dX_dt, icx, icy, ts)
 
 def plot_trajectory(plt, dX_dt, icx, icy, ts):
     for r in icx:

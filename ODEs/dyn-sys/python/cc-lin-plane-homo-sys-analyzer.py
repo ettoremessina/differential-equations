@@ -60,7 +60,7 @@ def plot_favourite_solution(sym_sol):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='%(prog)s analyzes a dynamyc system modeled by a linear planar system', formatter_class=RawTextHelpFormatter)
 
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0.2')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0.3')
 
     parser.add_argument('--matrix',
                         type=float,
@@ -91,7 +91,14 @@ if __name__ == "__main__":
                         dest='constant_of_integration_C2',
                         default=1.0,
                         required=False,
-                        help='Value of constant of integration C2 to chhose (together with C1) the favourite solution')
+                        help='Value of constant of integration C2 to choose (together with C1) the favourite solution')
+
+    parser.add_argument('--plot_neg_time_traj',
+                        type=str,
+                        dest='plot_neg_time_traj',
+                        default='yes',
+                        required=False,
+                        help='Plot trajectory for negative time [yes/no], default=yes')
 
     add_plot_params(parser)
 
@@ -136,7 +143,7 @@ if __name__ == "__main__":
     sp.pprint(sym_sol)
 
     init_phase_portrait(args)
-    plot_phase_portait(args, dX_dt)
+    plot_phase_portait(args, dX_dt, args.plot_neg_time_traj == 'yes')
     if cpKind != 'whole plane':
         plot_gradient_vector(args, dX_dt)
     plot_eigenvectors([0, 0], eigenvalue1, eigenvalue2, eigenvector1, eigenvector2)

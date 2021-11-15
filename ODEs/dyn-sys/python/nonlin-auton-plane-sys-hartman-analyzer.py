@@ -94,6 +94,13 @@ if __name__ == "__main__":
     add_xyt_params(parser)
     add_plot_params(parser)
 
+    parser.add_argument('--plot_neg_time_traj',
+                        type=str,
+                        dest='plot_neg_time_traj',
+                        default='yes',
+                        required=False,
+                        help='Plot trajectory for negative time [yes/no], default=yes')
+
     args = parser.parse_args()
 
     print("#### Started %s ####" % os.path.basename(__file__));
@@ -121,7 +128,7 @@ if __name__ == "__main__":
         print("Critical points are infinite;\n\tthis program supports only finite and hyperbolic critical points")
 
     init_phase_portrait(args)
-    plot_phase_portait(args, dX_dt)
+    plot_phase_portait(args, dX_dt, args.plot_neg_time_traj == 'yes')
     plot_gradient_vector(args, dX_dt)
     plt.show()
 
