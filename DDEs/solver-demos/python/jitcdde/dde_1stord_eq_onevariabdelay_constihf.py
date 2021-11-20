@@ -8,9 +8,6 @@ def delay(y, t):
 equation = [y(0, t - delay(y, t))]
 dde = jitcdde(equation, max_delay=1000)
 
-def initial_history_func_exp_pt(t):
-    return np.exp(t)
-
 plt.rcParams['font.size'] = 8
 fig, axs = plt.subplots(2, 1)
 fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
