@@ -24,7 +24,7 @@ for t in ts:
 	ys.append(ddesys.integrate(t))
 ys=np.array(ys)
 axs.plot(ts, ys[:,0], color='red', linewidth=1)
-axs.plot(ts, ys[:,1], color='green', linewidth=1)
-axs.set_title('$ihf_x(t)=1; ihf_y(t)=-1$; d=0.5')
+axs.plot(ts, ys[:,1], color='blue', linewidth=1)
+axs.set_title('$ihf_x(t)=1; ihf_y(t)=-1; d=0.5$')
 
 plt.show()

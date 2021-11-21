@@ -19,7 +19,7 @@ ts = np.linspace(0, 3, 2000)
 
 ys = ddeint(equation, initial_history_func, ts, fargs=(0.5,))
 axs.plot(ts, ys[:,0], color='red', linewidth=1)
-axs.plot(ts, ys[:,1], color='green', linewidth=1)
-axs.set_title('$ihf_x(t)=1; ihf_y(t)=-1$; d=0.5')
+axs.plot(ts, ys[:,1], color='blue', linewidth=1)
+axs.set_title('$ihf_x(t)=1; ihf_y(t)=-1; d=0.5$')
 
 plt.show()
