@@ -23,6 +23,6 @@ ys = []
 for t in ts:
 	ys.append(dde.integrate(t))
 axs.plot(ts, ys, color='red', linewidth=1)
-axs.set_title('$ihf(t)=1$')
+axs.set_title('$ihf(t)=e^t$')
 
 plt.show()

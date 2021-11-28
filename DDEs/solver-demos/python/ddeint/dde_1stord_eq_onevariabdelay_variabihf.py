@@ -20,6 +20,6 @@ ts = np.linspace(0, 30, 10000)
 
 ys = ddeint(equation, initial_history_func_exp_pt, ts)
 axs.plot(ts, ys, color='red', linewidth=1)
-axs.set_title('$ihf(t)=1$')
+axs.set_title('$ihf(t)=e^t$')
 
 plt.show()
